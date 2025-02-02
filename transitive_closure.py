@@ -1,6 +1,10 @@
 import time 
 import random
 
+import sys
+
+sys.setrecursionlimit(20000) 
+
 # a bad matrix class D:
 class TrnMtx:
 
@@ -31,12 +35,14 @@ class TrnMtx:
         return new_matrix
     def random_matrix():
         
-        TrnMtx.MATRIX_LEN = random.randint(3,50)
+        TrnMtx.MATRIX_LEN = random.randint(800,1000)
+
+        print(TrnMtx.MATRIX_LEN)
         new_matrix = [[0] * TrnMtx.MATRIX_LEN for _ in range(TrnMtx.MATRIX_LEN)]
 
         for i in range(TrnMtx.MATRIX_LEN):
             for c in range(TrnMtx.MATRIX_LEN):
-                if random.randint(1,15) == 1:
+                if random.randint(1,50) == 1:
                     new_matrix[i][c] = 1
 
         TrnMtx.matrix = new_matrix
@@ -59,10 +65,9 @@ for k in range(MATRIX_LEN):
             if matrix[i][k] == 1 and matrix[k][j] == 1:
                 matrix[i][j] = 1
 
-for i in matrix:
-    print(i)
-warsh_time = time.time()-t
 
+warsh_time = time.time()-t
+temp_matrix = matrix
 
 # calculate time
 print(warsh_time)
@@ -90,11 +95,17 @@ start_array = TrnMtx.convert_to_pairs()
 # if they are there
 array = find_connections(1,1)
 
+
 matrix = TrnMtx.convert_from_pairs(start_array)
-for i in matrix:
-    print(i)
 
 my_time = time.time()-t
+
+
+
 print(my_time)
+
+print()
 print(warsh_time/my_time)
+
+print(matrix == temp_matrix)
 
