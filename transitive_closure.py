@@ -1,30 +1,38 @@
 import time
+import copy
 
-
-class trnMtx:
-  matrix = [
-    [0,1,0,0],
-    [0,0,0,0],
-    [0,0,0,1],
+class TrnMtx:
+    matrix = [
+    [0,0,1,0],
     [1,0,0,0],
+    [1,0,1,0],
+    [0,1,0,1],
     ]
-  
-  MATRIX_LEN = len(matrix[0])
 
-  def convert_to_pairs():
-    array = []
+    MATRIX_LEN = len(matrix[0])
 
-    for i in range(MATRIX_LEN):
-        for j in range(MATRIX_LEN):
-            if matrix[i][j] == 1:
-                array.append([i+1,j+1])
+    def convert_to_pairs():
+        array = []
 
-    return array
+        for i in range(MATRIX_LEN):
+            for j in range(MATRIX_LEN):
+                if matrix[i][j] == 1:
+                    array.append([i+1,j+1])
 
+        return array
 
-matrix = trnMtx.matrix
+    def convert_from_pairs(pairs):
+        new_matrix = [[0] * MATRIX_LEN for _ in range(MATRIX_LEN)] 
+        
+        for i in pairs:
+ 
+            new_matrix[i[0]-1][i[1]-1] = 1
 
-MATRIX_LEN = trnMtx.MATRIX_LEN
+        return new_matrix
+
+matrix = TrnMtx.matrix
+
+MATRIX_LEN = TrnMtx.MATRIX_LEN
 
 # Warshall's
 
@@ -43,35 +51,37 @@ warsh_time = time.time()-t
 print(warsh_time)
 
 # finds conections by swapping [s,v] -> [v+1,s]
-def find_connections(start, value, current_connections = []):
-
+def find_connections(start, value):
+    print("CALL")
     # if [start,value] is a combo add it
     if [start,value] in start_array:
-        
-        current_connections.append([start,value])
-        
-        return find_connections(start=value+1,value=start,current_connections=current_connections)
+
+        if [start,value] not in start_array:
+            start_array.append([start,value])
+
+        return find_connections(start=value+1,value=start)
     
     # go next
     if value < MATRIX_LEN:
         
-        return find_connections(start=value+1,value=start,current_connections=current_connections)
-    
-    return current_connections
+        return find_connections(start=value+1,value=start)
 
 # calculate time
 t = time.time()
 # Mine
-start_array = trnMtx.convert_to_pairs()
+start_array = TrnMtx.convert_to_pairs()
 
 # if they are there
 array = find_connections(1,1)
-for i in array:
-    if [array[0][0], i[1]] not in start_array:
-        start_array.append([array[0][0], i[1]])
-        
+
+matrix = TrnMtx.convert_from_pairs(start_array)
+for i in matrix:
+    print(i)
+
+
+
+
 my_time = time.time()-t
 print(my_time)
 print(warsh_time/my_time)
-# returns pairs as matrix relation
-print(start_array)
+
